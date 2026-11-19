@@ -55,7 +55,13 @@ code, .mono { font-family: var(--font-mono); }
 .app { min-height: 100vh; display: flex; flex-direction: column; }
 .main { flex: 1; width: 100%; max-width: 1500px; margin: 0 auto; padding: 1.4rem 1.6rem 2rem; box-sizing: border-box; }
 .isc-header__title { font-size: 1.5rem; }
-.isc-footer { margin-top: auto; }
+.isc-footer {
+  margin-top: auto;
+  /* Always visible, and immune to the text zoom so the zoom buttons never move. */
+  position: sticky; bottom: 0; z-index: 10;
+  background: var(--isc-bg-page);
+  zoom: calc(1 / var(--zoom, 1));
+}
 .build { position: fixed; left: 10px; bottom: 6px; font: 0.5rem var(--font-mono); opacity: 0.45; }
 
 /* ── Buttons ────────────────────────────────────────────────────────── */
@@ -89,7 +95,8 @@ code, .mono { font-family: var(--font-mono); }
   padding: 0.35rem 0.8rem; cursor: pointer;
 }
 .zoom__btn:disabled { opacity: .35; cursor: default; }
-.zoom__val { min-width: 4rem; border-color: transparent; background: transparent; }
+.zoom__btn { min-width: 2.6rem; text-align: center; }
+.zoom__val { min-width: 4rem; text-align: center; border-color: transparent; background: transparent; }
 
 .btn {
   border: 0;

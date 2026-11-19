@@ -108,11 +108,11 @@ onBeforeUnmount(() => {
       <template #logo>
         <div class="zoom">
           <button type="button" class="zoom__btn" :title="t.zoomOut" :aria-label="t.zoomOut"
-            :disabled="zoom <= ZOOM_MIN" @click="setZoom(zoom - ZOOM_STEP)">A−</button>
+            :disabled="zoom <= ZOOM_MIN" @click="setZoom(zoom - ZOOM_STEP)">−</button>
           <button type="button" class="zoom__val" :title="t.zoomReset" :aria-label="t.zoomReset"
             @click="setZoom(100)">{{ zoom }} %</button>
           <button type="button" class="zoom__btn" :title="t.zoomIn" :aria-label="t.zoomIn"
-            :disabled="zoom >= ZOOM_MAX" @click="setZoom(zoom + ZOOM_STEP)">A+</button>
+            :disabled="zoom >= ZOOM_MAX" @click="setZoom(zoom + ZOOM_STEP)">+</button>
         </div>
       </template>
     </Footer>
