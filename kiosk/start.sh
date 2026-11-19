@@ -24,9 +24,11 @@ trap 'kill $SERVER 2>/dev/null' EXIT
 # Snap Chromium (default on Ubuntu) is confined and cannot write ~/.config: use its own
 # writable dir instead ("failed to create data directory" otherwise).
 PROFILE="${PROFILE_DIR:-$HOME/.config/isc-kiosk}"
-case "$(readlink -f "$(command -v "$BROWSER")")" in
-  /snap/*|*/snap/bin/*) PROFILE="${PROFILE_DIR:-$HOME/snap/chromium/common/isc-kiosk}" ;;
-esac
+# /usr/bin/chromium(-browser) is only a shim to the snap, so also ask snapd.
+if [ "$BROWSER" != google-chrome ] && { case "$(readlink -f "$(command -v "$BROWSER")")" in /snap/*|*/snap/bin/*) true ;; *) false ;; esac \
+    || { command -v snap >/dev/null && snap list chromium >/dev/null 2>&1; }; }; then
+  PROFILE="${PROFILE_DIR:-$HOME/snap/chromium/common/isc-kiosk}"
+fi
 mkdir -p "$PROFILE"
 
 "$BROWSER" --kiosk --user-data-dir="$PROFILE" \
