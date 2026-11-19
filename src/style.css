@@ -41,7 +41,7 @@
 }
 
 /* Big screen first: everything scales with the viewport. */
-html { font-size: clamp(16px, 0.55vw + 10px, 26px); background: var(--isc-bg-page); }
+html { font-size: calc(clamp(16px, 0.55vw + 10px, 26px) * var(--zoom, 1)); background: var(--isc-bg-page); }
 body {
   margin: 0;
   font-family: var(--font-sans);
@@ -55,7 +55,13 @@ code, .mono { font-family: var(--font-mono); }
 .app { min-height: 100vh; display: flex; flex-direction: column; }
 .main { flex: 1; width: 100%; max-width: 1500px; margin: 0 auto; padding: 1.4rem 1.6rem 2rem; box-sizing: border-box; }
 .isc-header__title { font-size: 1.5rem; }
-.isc-footer { margin-top: auto; }
+.isc-footer {
+  margin-top: auto;
+  /* Always visible, and immune to the text zoom so the zoom buttons never move. */
+  position: sticky; bottom: 0; z-index: 10;
+  background: var(--isc-bg-page);
+  zoom: calc(1 / var(--zoom, 1));
+}
 .build { position: fixed; left: 10px; bottom: 6px; font: 0.5rem var(--font-mono); opacity: 0.45; }
 
 /* ── Buttons ────────────────────────────────────────────────────────── */
@@ -73,6 +79,24 @@ code, .mono { font-family: var(--font-mono); }
 .pill-btn:active { transform: scale(.97); }
 .pill-btn--strong { background: var(--accent); border-color: var(--accent); color: #fff; }
 .theme-fab { width: 2.2rem; height: 2.2rem; }
+/* The tooltip is centred under the button, which sits at the right edge:
+   it overflowed the viewport and made scroll bars appear. Anchor it right. */
+.theme-fab[data-tooltip]:hover::after {
+  left: auto; right: 0; transform: none;
+  animation-name: theme-tooltip-in;
+}
+@keyframes theme-tooltip-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* ── Zoom controls (footer) ─────────────────────────────────────────── */
+.zoom { grid-area: logo; justify-self: end; display: flex; align-items: center; gap: 0.4rem; }
+.zoom__btn, .zoom__val {
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: 999px; font: 600 0.8rem var(--font-mono);
+  padding: 0.35rem 0.8rem; cursor: pointer;
+}
+.zoom__btn:disabled { opacity: .35; cursor: default; }
+.zoom__btn { min-width: 2.6rem; text-align: center; }
+.zoom__val { min-width: 4rem; text-align: center; border-color: transparent; background: transparent; }
 
 .btn {
   border: 0;

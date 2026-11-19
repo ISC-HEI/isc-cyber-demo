@@ -11,6 +11,9 @@ export const ui = {
     pickStation: 'Choisis une épreuve',
     intro: 'Mots de passe, réseaux sociaux, arnaques : à toi de jouer !',
     privacy: 'Rien de ce que tu tapes n’est enregistré ni envoyé : tout reste dans ce navigateur et s’efface automatiquement.',
+    zoomIn: 'Agrandir le texte',
+    zoomOut: 'Réduire le texte',
+    zoomReset: 'Taille normale',
     idle: 'Retour à l’accueil dans',
   },
 };

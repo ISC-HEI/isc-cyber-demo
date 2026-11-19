@@ -29,10 +29,19 @@ const now = ref(Date.now());
 let tick = null;
 function touch() { lastActivity.value = Date.now(); }
 const idleLeft = computed(() => Math.max(0, idleSeconds() - Math.floor((now.value - lastActivity.value) / 1000)));
-const showIdleWarning = computed(() => currentId.value && !settingsOpen.value && idleLeft.value <= 15);
+const showIdleWarning = computed(() => currentId.value && !settingsOpen.value && idleLeft.value <= 10);
 
+// Text zoom: 50 % → 200 %, applied as a multiplier on the root font size.
+const ZOOM_MIN = 50, ZOOM_MAX = 200, ZOOM_STEP = 10;
+const zoom = ref(100);
+function setZoom(v) {
+  zoom.value = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, v));
+  document.documentElement.style.setProperty('--zoom', zoom.value / 100);
+}
+
+const ACTIVITY_EVENTS = ['pointerdown', 'pointermove', 'mousemove', 'keydown', 'wheel', 'touchstart', 'touchmove', 'scroll'];
 onMounted(() => {
-  for (const ev of ['pointerdown', 'keydown', 'wheel', 'touchstart']) window.addEventListener(ev, touch, { passive: true });
+  for (const ev of ACTIVITY_EVENTS) window.addEventListener(ev, touch, { passive: true, capture: true });
   tick = setInterval(() => {
     now.value = Date.now();
     if (currentId.value && !settingsOpen.value && idleLeft.value === 0) { goHome(); touch(); }
@@ -40,7 +49,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   clearInterval(tick);
-  for (const ev of ['pointerdown', 'keydown', 'wheel', 'touchstart']) window.removeEventListener(ev, touch);
+  for (const ev of ACTIVITY_EVENTS) window.removeEventListener(ev, touch, { capture: true });
 });
 </script>
 
@@ -95,7 +104,18 @@ onBeforeUnmount(() => {
       <component v-else :is="current.component" :key="runKey" @next="next" @home="goHome" />
     </main>
 
-    <Footer @secret-click="settingsOpen = true" />
+    <Footer @secret-click="settingsOpen = true">
+      <template #logo>
+        <div class="zoom">
+          <button type="button" class="zoom__btn" :title="t.zoomOut" :aria-label="t.zoomOut"
+            :disabled="zoom <= ZOOM_MIN" @click="setZoom(zoom - ZOOM_STEP)">−</button>
+          <button type="button" class="zoom__val" :title="t.zoomReset" :aria-label="t.zoomReset"
+            @click="setZoom(100)">{{ zoom }} %</button>
+          <button type="button" class="zoom__btn" :title="t.zoomIn" :aria-label="t.zoomIn"
+            :disabled="zoom >= ZOOM_MAX" @click="setZoom(zoom + ZOOM_STEP)">+</button>
+        </div>
+      </template>
+    </Footer>
     <div class="build">{{ build }}</div>
   </div>
 
