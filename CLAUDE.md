@@ -30,7 +30,7 @@ The built `dist/` must be served over `http://` (the brute-force Web Worker does
 **Shell** (`src/App.vue`): home grid of tiles → one station at a time. There is no router; `currentId`
 selects a station from `src/stations.js`, and `<component :is :key="runKey">` renders it. Bumping `runKey`
 remounts the station, which is how "Recommencer", "Accueil" and the idle auto-reset wipe all visitor input.
-The idle timer (default 90 s, floor 20 s) lives in `App.vue` and is paused while the settings panel is open.
+The idle timer (default 30 s, floor 20 s) lives in `App.vue` and is paused while the settings panel is open.
 
 **Station contract**: each `src/stations/*Station.vue` is a self-contained `<script setup>` component that
 `defineEmits(['next'])` and emits `next` from its final button. Order, step number, emoji, title, pitch

@@ -12,7 +12,7 @@ sur grand écran.
 | 4 | **Piège ou pas piège ?**: 4 messages tirés parmi 6 (SMS, emails, pages), marques fictives | réflexes anti-phishing |
 | 5 | **Casse le code de César**: analyse de fréquences ; coulisses : vrai AES-128 et pourquoi les fréquences échouent | crypto moderne |
 
-Rien n'est stocké ni envoyé : tout tourne dans le navigateur, hors ligne. Après 90 s d'inactivité
+Rien n'est stocké ni envoyé : tout tourne dans le navigateur, hors ligne. Après 30 s d'inactivité
 (réglable), retour à l'accueil et effacement des saisies.
 
 ## Lancer

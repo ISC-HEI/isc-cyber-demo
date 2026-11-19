@@ -25,7 +25,7 @@ export const DEFAULTS = {
   machineArticle: PRESETS[0].article,
   fastRate: PRESETS[0].fastRate,
   slowRate: PRESETS[0].slowRate,
-  idleSeconds: 90,
+  idleSeconds: 30,
 };
 
 export function applyPreset(p) {
