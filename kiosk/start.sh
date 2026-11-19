@@ -21,6 +21,14 @@ SERVER=$!
 trap 'kill $SERVER 2>/dev/null' EXIT
 
 # Dedicated profile, no --incognito: it would wipe the settings kept in localStorage.
-"$BROWSER" --kiosk --user-data-dir="$HOME/.config/isc-kiosk" \
+# Snap Chromium (default on Ubuntu) is confined and cannot write ~/.config: use its own
+# writable dir instead ("failed to create data directory" otherwise).
+PROFILE="${PROFILE_DIR:-$HOME/.config/isc-kiosk}"
+case "$(readlink -f "$(command -v "$BROWSER")")" in
+  /snap/*|*/snap/bin/*) PROFILE="${PROFILE_DIR:-$HOME/snap/chromium/common/isc-kiosk}" ;;
+esac
+mkdir -p "$PROFILE"
+
+"$BROWSER" --kiosk --user-data-dir="$PROFILE" \
   --noerrdialogs --disable-infobars --no-first-run --no-default-browser-check \
   --disable-session-crashed-bubble "$URL"

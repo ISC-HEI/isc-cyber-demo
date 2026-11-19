@@ -15,5 +15,5 @@ Quitter : `Alt+F4` (ou `Ctrl+W`). Le serveur s'arrête avec Chromium.
 Notes :
 
 - Pas de `--incognito` : les réglages de l'assistant sont dans `localStorage`, dans un
-  profil dédié (`~/.config/isc-kiosk`).
+  profil dédié (`~/.config/isc-kiosk`, ou `~/snap/chromium/common/isc-kiosk` pour Chromium snap).
 - Variables optionnelles : `PORT` (défaut 8080) et `APP_DIR` (défaut `dist/`).
