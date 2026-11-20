@@ -10,7 +10,7 @@ URL="http://127.0.0.1:${PORT}"
 
 [ -f "$APP_DIR/index.html" ] || { echo "dist/ missing: run 'bun run build' first" >&2; exit 1; }
 
-for b in chromium chromium-browser google-chrome; do
+for b in google-chrome chromium chromium-browser; do
   command -v "$b" >/dev/null && { BROWSER="$b"; break; }
 done
 [ -n "${BROWSER:-}" ] || { echo "no Chromium/Chrome found" >&2; exit 1; }
@@ -30,6 +30,18 @@ if [ "$BROWSER" != google-chrome ] && { case "$(readlink -f "$(command -v "$BROW
   PROFILE="${PROFILE_DIR:-$HOME/snap/chromium/common/isc-kiosk}"
 fi
 mkdir -p "$PROFILE"
+
+# X11 fallback: some window managers (GNOME + snap Chromium) leave the title bar and dock
+# visible despite --kiosk. Ask the WM for fullscreen explicitly (needs: apt install wmctrl).
+if [ -n "${DISPLAY:-}" ] && command -v wmctrl >/dev/null; then
+  (
+    for _ in $(seq 1 30); do
+      sleep 1
+      id="$(wmctrl -l -x | awk 'tolower($3) ~ /chrom/ {print $1; exit}')"
+      [ -n "$id" ] && { wmctrl -i -r "$id" -b add,fullscreen; break; }
+    done
+  ) &
+fi
 
 # Snap Chromium often ignores --kiosk alone (Wayland/XWayland): also force fullscreen
 # and let Chromium pick the native display backend. Extra flags: CHROMIUM_FLAGS="...".
