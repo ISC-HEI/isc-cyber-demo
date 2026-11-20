@@ -31,6 +31,10 @@ if [ "$BROWSER" != google-chrome ] && { case "$(readlink -f "$(command -v "$BROW
 fi
 mkdir -p "$PROFILE"
 
-"$BROWSER" --kiosk --user-data-dir="$PROFILE" \
+# Snap Chromium often ignores --kiosk alone (Wayland/XWayland): also force fullscreen
+# and let Chromium pick the native display backend. Extra flags: CHROMIUM_FLAGS="...".
+# shellcheck disable=SC2086
+"$BROWSER" --kiosk --start-fullscreen --ozone-platform-hint=auto \
+  --window-position=0,0 ${CHROMIUM_FLAGS:-} --user-data-dir="$PROFILE" \
   --noerrdialogs --disable-infobars --no-first-run --no-default-browser-check \
   --disable-session-crashed-bubble "$URL"
